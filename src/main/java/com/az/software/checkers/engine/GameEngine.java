@@ -1,5 +1,8 @@
 package com.az.software.checkers.engine;
 
+import com.az.software.checkers.exception.InvalidMoveException;
+import com.az.software.checkers.exception.NoPieceFoundException;
+import com.az.software.checkers.exception.NotYourTurnException;
 import com.az.software.checkers.model.Board;
 import com.az.software.checkers.model.Piece;
 import com.az.software.checkers.model.PlayerColor;
@@ -32,9 +35,16 @@ public class GameEngine {
     public boolean move(Position from, Position to) {
         Piece piece = board.getPiece(from.getRow(), from.getCol());
 
+        if (piece == null) {
+            throw new NoPieceFoundException("No piece found at position: " + from);
+        }
+
+        if (piece.getColor() != currentPlayer) {
+            throw new NotYourTurnException("It's " + currentPlayer + "'s turn, not " + piece.getColor());
+        }
+
         if (!validator.isValidMove(board, from, to, currentPlayer)) {
-            System.out.println("Invalid move");
-            return false;
+            throw new InvalidMoveException("Move from " + from + " to " + to + " is not valid.");
         }
 
         // Check for jump and remove captured piece
