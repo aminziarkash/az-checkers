@@ -21,6 +21,10 @@ public class GameEngine {
         board.printBoard();
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public PlayerColor getCurrentPlayer() {
         return currentPlayer;
     }
