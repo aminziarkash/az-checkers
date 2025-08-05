@@ -1,5 +1,8 @@
 package com.az.software.checkers.engine;
 
+import com.az.software.checkers.exception.InvalidMoveException;
+import com.az.software.checkers.exception.NoPieceFoundException;
+import com.az.software.checkers.exception.NotYourTurnException;
 import com.az.software.checkers.model.Board;
 import com.az.software.checkers.model.Piece;
 import com.az.software.checkers.model.PlayerColor;
@@ -61,56 +64,64 @@ class GameEngineTest {
             A B C D E F G H
      */
     @Test
-    void testInvalidMoveToOccupiedSquare() {
+    void testInvalidMoveToOccupiedSquare_throwsException() {
         engine.move(new Position(2, 1), new Position(3, 2)); // Black moves
         engine.move(new Position(5, 0), new Position(4, 1)); // White moves
 
-        // Act
-        boolean result = engine.move(new Position(2, 3), new Position(3, 2)); // Black moves
-
-        // Assert
-        assertFalse(result, "Move should be invalid because destination is occupied");
-        assertNotNull(engine.getBoard().getPiece(3, 2));
+        // Try to move into already occupied square
+        assertThrows(InvalidMoveException.class, () -> {
+            engine.move(new Position(2, 3), new Position(3, 2)); // Invalid move
+        }, "Should throw InvalidMoveException due to occupied destination");
     }
 
     @Test
-    public void testJumpOverOpponent() {
+    public void testJumpOverOpponent_successfullyCaptures() {
         Board board = engine.getBoard();
         board.setPiece(2, 1, new Piece(PlayerColor.BLACK));
         board.setPiece(3, 2, new Piece(PlayerColor.WHITE));
 
-        // Act
         boolean result = engine.move(new Position(2, 1), new Position(4, 3));
-
-        // Assert
-        assertTrue(result, "Jump should be valid");
-        assertNull(board.getPiece(3, 2)); // Captured piece should be removed
-        assertNotNull(board.getPiece(4, 3)); // Black piece moved
+        assertTrue(result);
+        assertNull(board.getPiece(3, 2), "Captured piece should be removed");
+        assertNotNull(board.getPiece(4, 3), "Black piece should move to target");
     }
 
     @Test
-    void testPromotionToKing() {
+    void testPromotionToKing_afterReachingEnd() {
         Board board = engine.getBoard();
-
-        // TODO: Check, I think clearBoard is needed here
-        // Clear board
         clearBoard(board);
-
         Piece blackPiece = new Piece(PlayerColor.BLACK);
         board.setPiece(6, 1, blackPiece);
 
-        // Move to last row
-        engine.move(new Position(6, 1), new Position(7, 2));
+        engine.move(new Position(6, 1), new Position(7, 2)); // Should promote
 
         assertTrue(blackPiece.isKing(), "Piece should be promoted to King");
     }
 
     @Test
-    void testInvalidBackwardMoveForMan() {
+    void testInvalidBackwardMoveForMan_throwsInvalidMoveException() {
         engine.move(new Position(2, 1), new Position(3, 2)); // Black move
         engine.move(new Position(5, 0), new Position(4, 1)); // White move
-        boolean result = engine.move(new Position(3, 2), new Position(2, 3)); // Black moves backward
-        assertFalse(result, "Non-king cannot move backward");
+        assertThrows(InvalidMoveException.class, () -> {
+            engine.move(new Position(3, 2), new Position(2, 3)); // Black tries to go backward
+        }, "Non-king should not be allowed to move backward");
+    }
+
+    @Test
+    void testMoveFromEmptySquare_throwsNoPieceException() {
+        assertThrows(NoPieceFoundException.class, () -> {
+            engine.move(new Position(3, 3), new Position(4, 4));
+        }, "Should throw NoPieceException for empty square");
+    }
+
+    @Test
+    void testMoveWhenNotYourTurn_throwsNotYourTurnException() {
+        engine.move(new Position(2, 1), new Position(3, 2)); // Black
+
+        // Try moving another black piece again
+        assertThrows(NotYourTurnException.class, () -> {
+            engine.move(new Position(2, 3), new Position(3, 4));
+        }, "Should throw NotYourTurnException because it's WHITE's turn");
     }
 
     private static void clearBoard(Board board) {
