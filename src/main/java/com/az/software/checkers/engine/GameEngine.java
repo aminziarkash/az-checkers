@@ -1,0 +1,56 @@
+package com.az.software.checkers.engine;
+
+import com.az.software.checkers.model.Board;
+import com.az.software.checkers.model.Piece;
+import com.az.software.checkers.model.PlayerColor;
+import com.az.software.checkers.model.Position;
+
+public class GameEngine {
+
+    private final MoveValidator validator = new MoveValidator();
+
+    private final Board board;
+    private PlayerColor currentPlayer;
+
+    public GameEngine() {
+        this.board = new Board();
+        this.currentPlayer = PlayerColor.BLACK; // Since BLACK starts first
+    }
+
+    public void printBoard() {
+        board.printBoard();
+    }
+
+    public PlayerColor getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public boolean move(Position from, Position to) {
+        Piece piece = board.getPiece(from.getRow(), from.getCol());
+
+        if (!validator.isValidMove(board, from, to, currentPlayer)) {
+            System.out.println("Invalid move");
+            return false;
+        }
+
+        // Check for jump and remove captured piece
+        if (validator.isJumpMove(from, to)) {
+            Position captured = validator.getCapturedPosition(from, to);
+            board.removePiece(captured);
+            System.out.println("Captured piece at " + captured);
+        }
+
+        board.movePiece(from, to);
+
+        // Promote to King
+        if ((piece.getColor() == PlayerColor.BLACK && to.getRow() == 7)
+                || (piece.getColor() == PlayerColor.WHITE && to.getRow() == 0)) {
+            piece.promoteToKing();
+        }
+
+        // Switch turn
+        currentPlayer = (currentPlayer == PlayerColor.BLACK) ? PlayerColor.WHITE : PlayerColor.BLACK;
+        return true;
+    }
+
+}
