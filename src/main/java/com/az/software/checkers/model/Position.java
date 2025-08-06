@@ -20,6 +20,13 @@ public class Position {
         return col;
     }
 
+    public static Position fromAlgebraic(String notation) {
+        notation = notation.toUpperCase();
+        int col = notation.charAt(0) - 'A';
+        int row = 8 - Character.getNumericValue(notation.charAt(1));
+        return new Position(row, col);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

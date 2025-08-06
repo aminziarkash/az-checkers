@@ -12,7 +12,7 @@ public class GameEngine {
 
     private final MoveValidator validator = new MoveValidator();
 
-    private final Board board;
+    private Board board;
     private PlayerColor currentPlayer;
 
     public GameEngine() {
@@ -26,6 +26,15 @@ public class GameEngine {
 
     public Board getBoard() {
         return board;
+    }
+
+    public void reset() {
+        this.board = new Board();
+        board.initialize();
+    }
+
+    public PlayerColor getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public boolean move(Position from, Position to) {

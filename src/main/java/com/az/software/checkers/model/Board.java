@@ -2,19 +2,19 @@ package com.az.software.checkers.model;
 
 public class Board {
 
-    private final Piece[][] grid;
+    private final Piece[][] board;
 
     public Board() {
-        this.grid = new Piece[8][8];
+        this.board = new Piece[8][8];
         initialize();
     }
 
     public Piece getPiece(int row, int col) {
-        return grid[row][col];
+        return board[row][col];
     }
 
     public void setPiece(int row, int col, Piece piece) {
-        grid[row][col] = piece;
+        board[row][col] = piece;
     }
 
     public void movePiece(Position from, Position to) {
@@ -27,12 +27,12 @@ public class Board {
         setPiece(position.getRow(), position.getCol(), null);
     }
 
-    private void initialize() {
+    public void initialize() {
         // Place the BLACK pieces on the top 3 rows (0-1-2)
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 8; col++) {
                 if ((row + col) % 2 != 0) {
-                    grid[row][col] = new Piece(PlayerColor.BLACK);
+                    board[row][col] = new Piece(PlayerColor.BLACK);
                 }
             }
         }
@@ -41,7 +41,7 @@ public class Board {
         for (int row = 5; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if ((row + col) % 2 != 0) {
-                    grid[row][col] = new Piece(PlayerColor.WHITE);
+                    board[row][col] = new Piece(PlayerColor.WHITE);
                 }
             }
         }
@@ -53,7 +53,7 @@ public class Board {
         for (int row = 0; row < 8; row++) {
             System.out.print((8 - row) + " | ");
             for (int col = 0; col < 8; col++) {
-                Piece piece = grid[row][col];
+                Piece piece = board[row][col];
                 if (piece == null) {
                     System.out.print(". ");
                 } else {
@@ -68,5 +68,35 @@ public class Board {
         }
         System.out.println("   ----------------");
         System.out.println("    A B C D E F G H");
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("    A B C D E F G H\n");
+        sb.append("   ----------------\n");
+
+        for (int row = 0; row < 8; row++) {
+            sb.append(8 - row).append(" | ");
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board[row][col];
+                if (piece == null) {
+                    sb.append(". ");
+                } else {
+                    char c = piece.getColor() == PlayerColor.BLACK ? 'B' : 'W';
+                    if (piece.isKing()) {
+                        c = Character.toLowerCase(c); // b or w for king
+                    }
+                    sb.append(c).append(" ");
+                }
+            }
+            sb.append("| ").append(8 - row).append("\n");
+        }
+
+        sb.append("   ----------------\n");
+        sb.append("    A B C D E F G H\n");
+
+        return sb.toString();
     }
 }
