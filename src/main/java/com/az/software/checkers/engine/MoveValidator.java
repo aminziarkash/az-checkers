@@ -9,6 +9,7 @@ public class MoveValidator {
 
     public boolean isValidMove(Board board, Position from, Position to, PlayerColor currentPlayer) {
         Piece piece = board.getPiece(from.getRow(), from.getCol());
+
         if (piece == null || piece.getColor() != currentPlayer) {
             return false;
         }
@@ -16,12 +17,12 @@ public class MoveValidator {
         int rowDiff = to.getRow() - from.getRow();
         int colDiff = to.getCol() - from.getCol();
 
-        // Not a diagonal move
-        if (colDiff != Math.abs(rowDiff)) {
+        // Must move diagonally
+        if (Math.abs(rowDiff) != Math.abs(colDiff)) {
             return false;
         }
 
-        // The destination must be empty
+        // Destination must be empty
         if (board.getPiece(to.getRow(), to.getCol()) != null) {
             return false;
         }
@@ -33,9 +34,10 @@ public class MoveValidator {
             if (isKing) {
                 return true;
             }
-            // For men: forward only
-            return (piece.getColor() == PlayerColor.BLACK && rowDiff == 1)
-                    || (piece.getColor() == PlayerColor.WHITE && rowDiff == -1);
+
+            // For men: allow forward-left and forward-right
+            return (currentPlayer == PlayerColor.BLACK && rowDiff == 1)
+                    || (currentPlayer == PlayerColor.WHITE && rowDiff == -1);
         }
 
         // Jump move (2 squares diagonal)
@@ -44,6 +46,7 @@ public class MoveValidator {
             int midCol = (from.getCol() + to.getCol()) / 2;
             Piece middlePiece = board.getPiece(midRow, midCol);
 
+            // Must jump over opponent's piece
             if (middlePiece == null || middlePiece.getColor() == currentPlayer) {
                 return false;
             }
@@ -52,9 +55,8 @@ public class MoveValidator {
                 return true;
             }
 
-            // For men: forward only
-            return (piece.getColor() == PlayerColor.BLACK && rowDiff == 2)
-                    || (piece.getColor() == PlayerColor.WHITE && rowDiff == -2);
+            return (currentPlayer == PlayerColor.BLACK && rowDiff == 2)
+                    || (currentPlayer == PlayerColor.WHITE && rowDiff == -2);
         }
 
         return false;
