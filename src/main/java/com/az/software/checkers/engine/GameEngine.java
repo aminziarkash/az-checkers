@@ -28,10 +28,6 @@ public class GameEngine {
         return board;
     }
 
-    public PlayerColor getCurrentPlayer() {
-        return currentPlayer;
-    }
-
     public boolean move(Position from, Position to) {
         Piece piece = board.getPiece(from.getRow(), from.getCol());
 

@@ -109,9 +109,9 @@ class GameEngineTest {
 
     @Test
     void testMoveFromEmptySquare_throwsNoPieceException() {
-        assertThrows(NoPieceFoundException.class, () -> {
-            engine.move(new Position(3, 3), new Position(4, 4));
-        }, "Should throw NoPieceException for empty square");
+        assertThrows(NoPieceFoundException.class, () ->
+                        engine.move(new Position(3, 3), new Position(4, 4)),
+                "Should throw NoPieceException for empty square");
     }
 
     @Test
@@ -119,9 +119,9 @@ class GameEngineTest {
         engine.move(new Position(2, 1), new Position(3, 2)); // Black
 
         // Try moving another black piece again
-        assertThrows(NotYourTurnException.class, () -> {
-            engine.move(new Position(2, 3), new Position(3, 4));
-        }, "Should throw NotYourTurnException because it's WHITE's turn");
+        assertThrows(NotYourTurnException.class, () ->
+                engine.move(new Position(2, 3), new Position(3, 4)),
+                "Should throw NotYourTurnException because it's WHITE's turn");
     }
 
     private static void clearBoard(Board board) {
