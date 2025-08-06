@@ -49,7 +49,7 @@ public class GameEngine {
         }
 
         if (!validator.isValidMove(board, from, to, currentPlayer)) {
-            throw new InvalidMoveException("Move from " + from + " to " + to + " is not valid.");
+            throw new InvalidMoveException("Move by : " + currentPlayer + " from " + from + " to " + to + " is not valid.");
         }
 
         // Check for jump and remove captured piece
