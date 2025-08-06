@@ -1,5 +1,7 @@
 package com.az.software.checkers.model;
 
+import com.az.software.checkers.util.PositionFormatter;
+
 import java.util.Objects;
 
 public class Position {
@@ -42,7 +44,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "(" + row + "," + col + ")";
+        return PositionFormatter.format(row, col);
     }
 
 }
