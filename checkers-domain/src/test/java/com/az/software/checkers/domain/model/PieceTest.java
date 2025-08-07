@@ -23,7 +23,8 @@ class PieceTest {
         Piece p = new Piece(Player.WHITE, false);
         assertThat(p.isKing()).isFalse();
 
-        p.promoteToKing();
+        p.setType(PieceType.KING);
+
         assertThat(p.isKing()).isTrue();
     }
 
@@ -38,10 +39,8 @@ class PieceTest {
 
     @Test
     void getSymbol_returnsUnicodeForKings() {
-        Piece white = new Piece(Player.WHITE, false);
-        white.promoteToKing();
-        Piece black = new Piece(Player.BLACK, false);
-        black.promoteToKing();
+        Piece white = new Piece(Player.WHITE, true);
+        Piece black = new Piece(Player.BLACK, true);
 
         assertThat(white.getSymbol()).isEqualTo("♔");
         assertThat(black.getSymbol()).isEqualTo("♚");
@@ -58,10 +57,8 @@ class PieceTest {
 
     @Test
     void toString_usesAsciiLowercaseForKings() {
-        Piece white = new Piece(Player.WHITE, false);
-        white.promoteToKing();
-        Piece black = new Piece(Player.BLACK, false);
-        black.promoteToKing();
+        Piece white = new Piece(Player.WHITE, true);
+        Piece black = new Piece(Player.BLACK, true);
 
         assertThat(white.toString()).isEqualTo("w");
         assertThat(black.toString()).isEqualTo("b");

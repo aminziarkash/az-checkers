@@ -54,7 +54,7 @@ public class GameService {
         // 1) Load the existing game state
         GameState currentState = repository.load(gameId);
 
-        // 2) Rehydrate the pure-domain game
+        // 2) Reload the pure-domain game
         CheckersGame game = new CheckersGame(
                 currentState.board(),
                 currentState.currentPlayer()

@@ -7,19 +7,19 @@ public class Piece {
 
     public Piece(Player player, boolean isKing) {
         this.player = player;
-        this.type = PieceType.MAN;
+        this.type = isKing ? PieceType.KING : PieceType.MAN;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public void promoteToKing() {
-        this.type = PieceType.KING;
-    }
-
     public boolean isKing() {
         return this.type == PieceType.KING;
+    }
+
+    public void setType(PieceType type) {
+        this.type = type;
     }
 
     public String getSymbol() {

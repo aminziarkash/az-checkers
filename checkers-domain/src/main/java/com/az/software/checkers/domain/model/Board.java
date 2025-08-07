@@ -76,13 +76,6 @@ public class Board {
         return new Board(newGrid);
     }
 
-    /**
-     * Checks if a row/col are within 0–7.
-     */
-    private boolean inBounds(int r, int c) {
-        return r >= 0 && r < 8 && c >= 0 && c < 8;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
