@@ -7,7 +7,6 @@ package com.az.software.checkers.domain.model;
  *  • { "row": 5, "col": 0 }
  *  • "B6"
  */
-//@JsonDeserialize(using = PositionDeserializer.class)
 public record Position(int row, int col) {
 
     /**
