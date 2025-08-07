@@ -13,7 +13,7 @@ public class Board {
     /**
      * Creates a new board with the standard initial setup:
      * - Rows 0–2 filled with BLACK pieces on alternating squares
-     * - Rows 5–7 filled with RED pieces on alternating squares
+     * - Rows 5–7 filled with WHITE pieces on alternating squares
      */
     public static Board initialSetup() {
         Piece[][] grid = new Piece[8][8];

@@ -32,7 +32,7 @@ public class Piece {
 
     @Override
     public String toString() {
-        // “W” = red, “B” = black; lowercase = king
+        // “W” = white, “B” = black; lowercase = king
         String symbol = (player == Player.WHITE ? "W" : "B");
         return isKing() ? symbol.toLowerCase() : symbol;
     }
