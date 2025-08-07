@@ -3,6 +3,8 @@ package com.az.software.checkers.service;
 import com.az.software.checkers.domain.CheckersGame;
 import com.az.software.checkers.domain.api.GameRepository;
 import com.az.software.checkers.domain.api.GameState;
+import com.az.software.checkers.domain.api.MoveStrategy;
+import com.az.software.checkers.domain.model.Player;
 import com.az.software.checkers.exception.InvalidMoveException;
 import com.az.software.checkers.domain.model.Board;
 import com.az.software.checkers.domain.model.Move;
@@ -20,9 +22,11 @@ public class GameService {
 
     private final GameRepository repository;
 
+    private final MoveStrategy ai;
 
-    public GameService(GameRepository repository) {
+    public GameService(GameRepository repository, MoveStrategy ai) {
         this.repository = repository;
+        this.ai = ai;
     }
 
     /**
@@ -60,14 +64,25 @@ public class GameService {
                 currentState.currentPlayer()
         );
 
-        // 3) Apply the move (may throw domain exceptions)
-        MoveResult result = game.applyMove(move);
+        // 3) Apply the human move (may throw domain exceptions)
+        MoveResult humanResult = game.applyMove(move);
 
-        // 4) Persist the updated state
+        // 4) Persist the updated state after human move
         repository.save(gameId, game.toState());
 
-        // 5) Return the result to the caller
-        return result;
+        // 5) If the game is not over, let the AI take its turn
+        Player nextPlayer = game.getCurrentPlayer();
+        ai.chooseMove(game.getBoard(), nextPlayer)
+                .ifPresent(aiMove -> {
+                    LOGGER.debug("AI chooses move: {} for gameId {}", aiMove, gameId);
+                    MoveResult aiResult = game.applyMove(aiMove);
+                    LOGGER.debug("AI moveResult: {}", aiResult);
+                    // persist after AI move
+                    repository.save(gameId, game.toState());
+                });
+
+        // 6) Return only the human MoveResult
+        return humanResult;
     }
 
     /**

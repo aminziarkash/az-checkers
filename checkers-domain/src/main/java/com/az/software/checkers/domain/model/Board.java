@@ -1,6 +1,8 @@
 package com.az.software.checkers.domain.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Board {
 
@@ -60,6 +62,74 @@ public class Board {
         }
 
         grid[toR][toC] = p;
+    }
+
+    /**
+     * Returns true if the given move is legal for the specified player,
+     * based on simple steps or single captures.
+     */
+    public boolean isValidMove(Move move, Player player) {
+        int fromR = move.from().row(), fromC = move.from().col();
+        int toR = move.to().row(), toC = move.to().col();
+
+        if (inBounds(fromR, fromC) || inBounds(toR, toC)) return false;
+        Piece p = grid[fromR][fromC];
+        if (p == null || p.getPlayer() != player) return false;
+        if (grid[toR][toC] != null) return false;
+
+        int dR = toR - fromR, dC = toC - fromC;
+        int absDR = Math.abs(dR), absDC = Math.abs(dC);
+
+        // Simple diagonal move
+        if (absDR == 1 && absDC == 1) {
+            if (!p.isKing()) {
+                // WHITE moves up (dR == -1), BLACK moves down (dR == +1)
+                if (player == Player.WHITE && dR != -1) return false;
+                if (player == Player.BLACK && dR != 1) return false;
+            }
+            return true;
+        }
+        // Capture move (jump)
+        else if (absDR == 2 && absDC == 2) {
+            int midR = (fromR + toR) / 2, midC = (fromC + toC) / 2;
+            Piece mid = grid[midR][midC];
+            if (mid == null || mid.getPlayer() == player) return false;
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if a row/col are within 0–7.
+     */
+    private boolean inBounds(int r, int c) {
+        return r < 0 || r >= 8 || c < 0 || c >= 8;
+    }
+
+
+    /**
+     * Returns all legal moves for the given player (single steps or captures).
+     */
+    public List<Move> getValidMoves(Player player) {
+        List<Move> moves = new ArrayList<>();
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = grid[r][c];
+                if (p != null && p.getPlayer() == player) {
+                    for (int dr : new int[]{-2, -1, 1, 2}) {
+                        for (int dc : new int[]{-2, -1, 1, 2}) {
+                            int nr = r + dr, nc = c + dc;
+                            Move m = new Move(new Position(r, c), new Position(nr, nc));
+                            if (isValidMove(m, player)) {
+                                moves.add(m);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return moves;
     }
 
     /**

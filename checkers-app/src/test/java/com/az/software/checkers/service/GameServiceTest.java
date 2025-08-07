@@ -93,7 +93,7 @@ class GameServiceTest {
         GameState initial = new GameState(Board.initialSetup(), Player.WHITE);
         when(repo.load(id)).thenReturn(initial);
 
-        GameService svc = new GameService(repo);
+        GameService svc = new GameService(repo, null);
         Move m = new Move(new Position(5,0), new Position(4,1));
         MoveResult res = svc.makeMove(m, id);
 
