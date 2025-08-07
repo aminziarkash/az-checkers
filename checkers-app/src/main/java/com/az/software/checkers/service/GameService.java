@@ -1,5 +1,8 @@
 package com.az.software.checkers.service;
 
+import com.az.software.checkers.domain.CheckersGame;
+import com.az.software.checkers.domain.api.GameRepository;
+import com.az.software.checkers.domain.api.GameState;
 import com.az.software.checkers.exception.InvalidMoveException;
 import com.az.software.checkers.domain.model.Board;
 import com.az.software.checkers.domain.model.Move;
@@ -8,35 +11,71 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class GameService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
 
-    private final CheckersGame checkersGame;
+    private final GameRepository repository;
 
-    public GameService(CheckersGame checkersGame) {
-        this.checkersGame = checkersGame;
+
+    public GameService(GameRepository repository) {
+        this.repository = repository;
     }
 
-    public Board getBoard() {
-        LOGGER.debug("Fetching current board state");
-        return checkersGame.getBoard();
+    /**
+     * Returns the current board for the given gameId.
+     */
+    public Board getBoard(UUID gameId) {
+        LOGGER.debug(String.format("Fetching current board state using gameId:%s", gameId));
+        GameState state = repository.load(gameId);
+        return state.board();
     }
 
-    public String getCurrentPlayer() {
-        LOGGER.debug("Fetching current player");
-        return checkersGame.getCurrentPlayer().toString();
+    /**
+     * Returns the current player (as a String) for the given gameId.
+     */
+    public String getCurrentPlayer(UUID gameId) {
+        LOGGER.debug(String.format("Fetching current player for the gameId %s", gameId));
+        GameState state = repository.load(gameId);
+        return state.currentPlayer().toString();
     }
 
+    /**
+     * Attempts the given move for the specified gameId.
+     * Loads state, the domain game and apply the move,
+     * persists the new state, and returns the MoveResult.
+     */
+    public MoveResult makeMove(Move move, UUID gameId) throws InvalidMoveException {
+        LOGGER.debug(String.format("Attempting move: %s for gameId: %s", move, gameId));
 
-    public MoveResult makeMove(Move move) throws InvalidMoveException {
-        LOGGER.debug("Attempting move: {}", move);
-        return checkersGame.applyMove(move);
+        // 1) Load the existing game state
+        GameState currentState = repository.load(gameId);
+
+        // 2) Rehydrate the pure-domain game
+        CheckersGame game = new CheckersGame(
+                currentState.board(),
+                currentState.currentPlayer()
+        );
+
+        // 3) Apply the move (may throw domain exceptions)
+        MoveResult result = game.applyMove(move);
+
+        // 4) Persist the updated state
+        repository.save(gameId, game.toState());
+
+        // 5) Return the result to the caller
+        return result;
     }
 
-    public void resetGame() {
-        LOGGER.debug("Resetting game");
-        checkersGame.reset();
+    /**
+     * Resets the game for the given gameId to a fresh initial state.
+     */
+    public void resetGame(UUID gameId) {
+        LOGGER.debug(String.format("Resetting game for gameId: %s", gameId));
+        CheckersGame fresh = new CheckersGame();
+        repository.save(gameId, fresh.toState());
     }
 }

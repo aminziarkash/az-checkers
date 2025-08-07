@@ -1,14 +1,13 @@
-package com.az.software.checkers.service;
+package com.az.software.checkers.domain;
 
+import com.az.software.checkers.domain.api.GameState;
 import com.az.software.checkers.domain.usecase.GameUseCase;
 import com.az.software.checkers.domain.model.*;
 import com.az.software.checkers.domain.validator.MoveValidator;
-import org.springframework.stereotype.Component;
 
 /**
  * Core game orchestrator for Checkers.
  */
-@Component
 public class CheckersGame implements GameUseCase {
 
     private Board board;
@@ -16,6 +15,11 @@ public class CheckersGame implements GameUseCase {
 
     public CheckersGame() {
         reset();
+    }
+
+    public CheckersGame(Board board, Player currentPlayer) {
+        this.board = board;
+        this.currentPlayer = currentPlayer;
     }
 
     /**
@@ -49,6 +53,11 @@ public class CheckersGame implements GameUseCase {
         currentPlayer = currentPlayer.opponent();
 
         return new MoveResult(true, "Moved successfully");
+    }
+
+    public GameState toState() {
+        // copy the board so we don’t leak mutability
+        return new GameState(this.board.copy(), this.currentPlayer);
     }
 
     /**
