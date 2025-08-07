@@ -5,49 +5,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.az.software.checkers</groupId>
-    <artifactId>az-checkers</artifactId>
+    <artifactId>checkers</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>checkers-app</module>
+        <module>checkers-domain</module>
+    </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.13.4</junit.version>
-        <spring-boot-version>3.5.4</spring-boot-version>
+        <java.version>17</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <spring.boot.version>3.5.4</spring.boot.version>
     </properties>
 
-    <dependencies>
-        <!-- Spring Boot Web -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot-version}</version>
-        </dependency>
-
-        <!-- To enable features like hot reload -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <version>${spring-boot-version}</version>
-            <scope>runtime</scope>
-            <optional>true</optional>
-        </dependency>
-
-        <!-- For dev tools and testing -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot-version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <plugins>
@@ -61,12 +46,12 @@
                     <target>${maven.compiler.target}</target>
                 </configuration>
             </plugin>
-            <!-- Surefire Plugin for JUnit -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
-            </plugin>
+<!--            &lt;!&ndash; Surefire Plugin for JUnit &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <version>3.0.0</version>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

@@ -1,2 +1,2 @@
-# az-checkers
+# checkers
 Checkers game engine
