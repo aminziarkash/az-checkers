@@ -1,6 +1,7 @@
 package com.az.software.checkers.exception;
 
 import com.az.software.checkers.domain.exception.MoveException;
+import com.az.software.checkers.domain.exception.NoPieceFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ public class GlobalExceptionHandler {
 
     /**
      * Catches all the domain move‐exceptions:
-     * OutOfBoundsException, NoPieceFoundException, etc.
+     * OutOfBoundsException etc.
      */
     @ExceptionHandler(MoveException.class)
     public ResponseEntity<ErrorResponse> handleMoveException(MoveException e,
@@ -24,6 +25,22 @@ public class GlobalExceptionHandler {
         );
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(error);
+    }
+
+    /**
+     * Catches NoPieceFoundException 404
+     */
+    @ExceptionHandler(NoPieceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoPieceFoundException(MoveException e,
+                                                             HttpServletRequest request) {
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                e.getMessage(),
+                request.getRequestURI()
+        );
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(error);
     }
 
