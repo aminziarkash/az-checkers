@@ -18,9 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static com.az.software.checkers.config.ApiVersionsConfig.API_V1;
+
 @Tag(name = "AZ Checkers Game", description = "Play and inspect my checkers games")
 @RestController
-@RequestMapping("/api/{gameId}")
+@RequestMapping(API_V1 + "/{gameId}")
 public class GameController {
 
     private final GameService gameService;
