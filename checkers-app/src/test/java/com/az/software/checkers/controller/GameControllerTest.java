@@ -2,6 +2,7 @@ package com.az.software.checkers.controller;
 
 import com.az.software.checkers.domain.model.*;
 import com.az.software.checkers.dto.MoveRequest;
+import com.az.software.checkers.mapper.MoveMapper;
 import com.az.software.checkers.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ class GameControllerTest {
     void makeMove_ReturnsMoveResponse() throws Exception {
         UUID gameId = UUID.randomUUID();
         MoveRequest req = new MoveRequest(new Position(5, 0), new Position(4, 1));
-        Move move = req.toDomain();
+        Move move = MoveMapper.toDomain(req);
         MoveResult result = new MoveResult(true, "Success");
 
         when(gameService.makeMove(eq(move), eq(gameId))).thenReturn(result);
@@ -90,7 +91,7 @@ class GameControllerTest {
     void makeMove_returnsSuccessJson() throws Exception {
         UUID id = UUID.randomUUID();
         MoveRequest req = new MoveRequest(new Position(5, 0), new Position(4, 1));
-        Move move = req.toDomain();
+        Move move = MoveMapper.toDomain(req);
 
         when(gameService.makeMove(move, id)).thenReturn(new MoveResult(true, "OK"));
 

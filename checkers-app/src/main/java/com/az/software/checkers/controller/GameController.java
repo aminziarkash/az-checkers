@@ -6,6 +6,7 @@ import com.az.software.checkers.dto.MoveRequest;
 import com.az.software.checkers.dto.MoveResponse;
 import com.az.software.checkers.dto.SimpleResponse;
 import com.az.software.checkers.mapper.BoardMapper;
+import com.az.software.checkers.mapper.MoveMapper;
 import com.az.software.checkers.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -78,7 +79,7 @@ public class GameController {
             @Validated @RequestBody MoveRequest moveRequest,
             @Parameter(description = "UUID of the game")
             @PathVariable("gameId") UUID gameId) {
-        var result = gameService.makeMove(moveRequest.toDomain(), gameId);
+        var result = gameService.makeMove(MoveMapper.toDomain(moveRequest), gameId);
         return ResponseEntity.ok(new MoveResponse(result.successful(), result.message()));
     }
 
