@@ -61,9 +61,7 @@ class GameControllerTest {
     @Test
     void makeMove_ReturnsMoveResponse() throws Exception {
         UUID gameId = UUID.randomUUID();
-        MoveRequest req = new MoveRequest();
-        req.setFrom(new Position(5, 0));
-        req.setTo(new Position(4, 1));
+        MoveRequest req = new MoveRequest(new Position(5, 0), new Position(4, 1));
         Move move = req.toDomain();
         MoveResult result = new MoveResult(true, "Success");
 
@@ -91,9 +89,7 @@ class GameControllerTest {
     @Test
     void makeMove_returnsSuccessJson() throws Exception {
         UUID id = UUID.randomUUID();
-        MoveRequest req = new MoveRequest();
-        req.setFrom(new Position(5, 0));
-        req.setTo(new Position(4, 1));
+        MoveRequest req = new MoveRequest(new Position(5, 0), new Position(4, 1));
         Move move = req.toDomain();
 
         when(gameService.makeMove(move, id)).thenReturn(new MoveResult(true, "OK"));

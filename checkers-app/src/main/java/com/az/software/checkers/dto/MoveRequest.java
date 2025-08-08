@@ -4,31 +4,16 @@ import com.az.software.checkers.domain.model.Move;
 import com.az.software.checkers.domain.model.Position;
 import jakarta.validation.constraints.NotNull;
 
-// TODO, change to record
-public class MoveRequest {
-
-    @NotNull
-    private Position from;
-
-    @NotNull
-    private Position to;
-
-    public Position getFrom() {
-        return from;
-    }
-
-    public void setFrom(Position from) {
-        this.from = from;
-    }
-
-    public Position getTo() {
-        return to;
-    }
-
-    public void setTo(Position to) {
-        this.to = to;
-    }
-
+/**
+ * DTO for a move request. Immutable record with validation annotations.
+ */
+public record MoveRequest(
+        @NotNull Position from,
+        @NotNull Position to
+) {
+    /**
+     * Convert this DTO into the domain Move object.
+     */
     public Move toDomain() {
         return new Move(from, to);
     }

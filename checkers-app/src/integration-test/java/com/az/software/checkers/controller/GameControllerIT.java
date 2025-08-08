@@ -48,9 +48,7 @@ public class GameControllerIT {
                 .andExpect(jsonPath("$.message").value("BLACK"));
 
         // 4) Make a move
-        MoveRequest req = new MoveRequest();
-        req.setFrom(Position.fromAlgebraic("B6"));
-        req.setTo(Position.fromAlgebraic("C5"));
+        MoveRequest req = new MoveRequest(Position.fromAlgebraic("B6"), Position.fromAlgebraic("C5"));
         mvc.perform(post("/api/{gameId}/move", gameId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(req)))
