@@ -81,9 +81,32 @@ _Squares are labeled for readability: files A–H (left to right) and ranks 1–
      -H "Content-Type: application/json" \
      -d '{"from":"B6","to":"A5"}'
 
+## Actuator
+##### Actuator endpoints
+  ```text
+  http://localhost:8080/actuator
+  
+  http://localhost:8080/actuator/health
+  
+  http://localhost:8080/actuator/info 
+  ```
+
+## Docker
+##### To run the application in a docker container
+```text 
+  1. From the rood directory, run: 
+     mvn clean package -pl checkers-app -am -DskipTests 
+     
+     _This will produce something like: checkers-app/target/checkers-app-1.0.0.jar_
+     
+  2. From the root directory, run: docker build -t checkers-app:latest .
+  
+  3. To run the docker container, run: docker run --rm -p 8080:8080 checkers-app:latest
+  
+  4. App is running, you access the endpoints using POSTMAN or curl commands
+```
+
 ## Swagger / OpenAPI
 ##### Interactive API docs & “Try it out”:
 
 http://localhost:8080/swagger-ui/index.html
-
-etc...

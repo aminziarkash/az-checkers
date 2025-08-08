@@ -14,7 +14,7 @@
     <dependencies>
         <!-- Core domain module -->
         <dependency>
-            <groupId>com.az.software.azcheckers</groupId>
+            <groupId>com.az.software.checkers</groupId>
             <artifactId>checkers-domain</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -22,6 +22,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <!-- Spring Boot Test (includes JUnit, Mockito, MockMvc, etc.) -->
         <dependency>
@@ -48,13 +52,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- this goal creates the executable jar -->
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <!-- Failsafe for integration tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.5.3</version>
                 <configuration>
                     <includes>
                         <include>**/*IT.java</include>

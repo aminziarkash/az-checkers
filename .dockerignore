@@ -1,0 +1,22 @@
+# Maven build outputs
+**/target
+**/out
+
+# IDE & editor files
+**/.idea
+**/*.iml
+**/.vscode
+
+# Git
+**/.git
+**/.gitignore
+
+# Logs, temp files
+**/*.log
+**/*.tmp
+
+# Dockerfiles if not needed in context
+Dockerfile*
+
+# Local Maven repo (if somehow inside your tree)
+.m2/
